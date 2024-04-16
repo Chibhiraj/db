@@ -1,25 +1,63 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
+const MyForm = () => {
+  const [formData, setFormData] = useState({
+    ml: '',
+    ps: ''
+  });
 
-function App() {
+  const handleChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    const newUser={
+      ml:formData.ml,
+      ps:formData.ps
+    }
+    // axios.post('http://localhost:3001',newUser);
+    axios.post("http://localhost:3001", {
+      ml: formData.ml,
+      ps: formData.ps,
+    })
+    .then((response) => {
+      console.log(response);
+    });
+    console.log(formData);
+
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Form</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="ml"
+            name="ml"
+            value={formData.ml}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="ps">Email:</label>
+          <input
+            type="text"
+            id="ps"
+            name="ps"
+            value={formData.ps}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
-}
+};
 
-export default App;
+export default MyForm;
