@@ -6,6 +6,8 @@ const MyForm = () => {
     ps: ''
   });
   const [users, setUsers] = useState([]);
+  const [updatedUser, setUpdatedUser] = useState({ ml: '', ps: '' });
+  const [deletedUserId, setDeletedUserId] = useState('');
 
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,6 +41,45 @@ const MyForm = () => {
         console.error("Error fetching users:", error.response.data);
       });
   }, []);
+
+  const handleUpdate = (userId) => {
+    
+    axios.put(`https://dbbackend-quiv.onrender.com/${userId}`, updatedUser)
+      .then((response) => {
+        console.log("User updated:", response.data);
+        
+        axios.get("https://dbbackend-quiv.onrender.com")
+          .then((response) => {
+            setUsers(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching users:", error.response.data);
+          });
+      })
+      .catch((error) => {
+        console.error("Error updating user:", error.response.data);
+      });
+  };
+
+  const handleDelete = (userId) => {
+    
+    axios.delete(`https://dbbackend-quiv.onrender.com/${userId}`)
+      .then((response) => {
+        console.log("User deleted:", response.data);
+        
+        axios.get("https://dbbackend-quiv.onrender.com")
+          .then((response) => {
+            setUsers(response.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching users:", error.response.data);
+          });
+      })
+      .catch((error) => {
+        console.error("Error deleting user:", error.response.data);
+      });
+  };
+
   
   return (
     <div>
@@ -70,9 +111,28 @@ const MyForm = () => {
       </form>
       <ul>
         {users.map(user => (
-          <li key={user.id}>Username: {user.ml}  password: {user.ps}</li>
+          <li key={user._id}>
+            {user.ml} - {user.ps}
+            <button onClick={() => handleUpdate(user._id)}>Update</button>
+            <button onClick={() => handleDelete(user._id)}>Delete</button>
+          </li>
         ))}
       </ul>
+
+      {/* Form to update user */}
+      <h2>Update User</h2>
+      <input
+        type="text"
+        placeholder="New ML value"
+        value={updatedUser.ml}
+        onChange={(e) => setUpdatedUser({ ...updatedUser, ml: e.target.value })}
+      />
+      <input
+        type="text"
+        placeholder="New PS value"
+        value={updatedUser.ps}
+        onChange={(e) => setUpdatedUser({ ...updatedUser, ps: e.target.value })}
+      />
     </div>
   );
 };
