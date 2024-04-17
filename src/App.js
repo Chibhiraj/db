@@ -17,7 +17,7 @@ const MyForm = () => {
       ps:formData.ps
     }
     // axios.post('https://dbbackend-quiv.onrender.com',newUser);
-    axios.post("http://localhost:3001", {
+    axios.post("https://dbbackend-quiv.onrender.com", {
       ml: formData.ml,
       ps: formData.ps,
     })
