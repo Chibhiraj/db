@@ -28,15 +28,7 @@ const MyForm = () => {
     alert("Success");
 
   };
-  useEffect(() => {
-    axios.get("https://dbbackend-quiv.onrender.com")
-      .then((response) => {
-        console.log("Users:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error.response.data);
-      });
-  }, []);
+ 
   
 
   return (
