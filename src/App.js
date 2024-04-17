@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 const MyForm = () => {
   const [formData, setFormData] = useState({
     ml: '',
     ps: ''
   });
+  const [users, setUsers] = useState([]);
 
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,7 +17,7 @@ const MyForm = () => {
       ml:formData.ml,
       ps:formData.ps
     }
-    // axios.post('https://dbbackend-quiv.onrender.com',newUser);
+    // axios.post('http://localhost:3001',newUser);
     axios.post("https://dbbackend-quiv.onrender.com", {
       ml: formData.ml,
       ps: formData.ps,
@@ -24,20 +25,21 @@ const MyForm = () => {
     .then((response) => {
       console.log(response);
     });
-    // console.log(formData);
-    alert("Success");
-    axios.get("https://dbbackend-quiv.onrender.com")
-      .then((response) => {
-        console.log("Users:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error.response.data);
-      });
+    console.log(formData);
 
   };
  
   
-
+  useEffect(() => {
+    axios.get("https://dbbackend-quiv.onrender.com")
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error.response.data);
+      });
+  }, []);
+  
   return (
     <div>
       <h1>Form</h1>
@@ -66,6 +68,11 @@ const MyForm = () => {
         </div>
         <button type="submit">Submit</button>
       </form>
+      <ul>
+        {users.map(user => (
+          <li key={user.id}>Username: {user.ml}  password: {user.ps}</li>
+        ))}
+      </ul>
     </div>
   );
 };
